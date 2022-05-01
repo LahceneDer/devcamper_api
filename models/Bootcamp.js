@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const slugify = require("slugify")
 
 
 const bootcampSchema = new mongoose.Schema({
@@ -42,11 +43,9 @@ const bootcampSchema = new mongoose.Schema({
         type: {
             type: String,
             enum: ['Point'],
-            // required: true
         },
         coordinates: {
             type: [Number],
-            // required: true,
             index: "2dsphere"
         },
         formattedAddress: String,
@@ -100,6 +99,12 @@ const bootcampSchema = new mongoose.Schema({
         default: Date.now
     }
 
+})
+
+// Create botcamp slug from the name
+bootcampSchema.pre('save', function(next){
+    this.slug = slugify(this.name, { lower: true })
+    next();
 })
 
 
